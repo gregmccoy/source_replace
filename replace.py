@@ -23,7 +23,7 @@ def file_match(fname, pat, old, replace):
         with open(fname, "w") as f:
             for line in new_data:
                 f.write(line)
-            
+
 def grep(dir_name, s_pat, replace):
     pat = re.compile(s_pat)
     for dirpath, dirnames, filenames in os.walk(dir_name):
@@ -40,8 +40,14 @@ def sources(path):
     for source in replaces:
         grep(path, source[0], source[1])
 
+class Parser(argparse.ArgumentParser):
+    def error(self, message):
+        sys.stderr.write('error: %s\n' % message)
+        self.print_help()
+        sys.exit(2)
+
 #Check for command line
-parser = argparse.ArgumentParser()
+parser = Parser()
 parser.add_argument(dest='input', help="Enter folder to search")
 args = parser.parse_args()
 sources(args.input)
